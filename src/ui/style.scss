@@ -1,0 +1,170 @@
+.aboutDescription {
+  font-size: 1.4rem;
+}
+
+.aboutGreetingTitle {
+  font-size: 1.8rem;
+}
+
+.noBorder {
+  border: none;
+}
+
+body {
+  margin-top: 54px;
+}
+
+.jumbotron {
+  margin-top: 0;
+  margin-bottom: 0;
+  border-radius: 0 !important;
+}
+
+.greyBackground {
+  background-color: #cbcbcb;
+}
+
+.practicesCard {
+  padding: 0;
+}
+
+.practicesCard > .card-header {
+  text-align: center;
+}
+
+.zoomOnHover {
+  transition: transform .2s;
+}
+
+.zoomOnHover:hover {
+  transform: scale(1.2);
+}
+
+.practicesCardBorder {
+  border-left: 3px solid;
+  border-bottom: 3px solid;
+  border-right: 3px solid;
+  border-color: rgb(0,0,0,.03);
+  border-bottom-left-radius: 2%;
+  border-bottom-right-radius: 2%;
+}
+
+.conwayGame {
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+  z-index: -1;
+  position: absolute;
+  touch-action: none;
+  background: black;
+}
+
+.conwayControls {
+  background-color: rgba(0, 0, 0, .9);
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+$navBgColor: black;
+
+nav {
+  position: fixed;
+  top: 0;
+  background-color: $navBgColor;
+  width: 100%;
+  z-index: 100;
+  ul {
+    display: inline-block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+      position: relative;
+      display: inline-block;
+      &:hover {
+        background-color: #888;
+        > ul {
+          display: inherit;
+          li {
+            display: list-item;
+          }
+        }
+      }
+      a {
+        display: block;
+        color: #fff !important;
+        text-decoration: none !important;
+        padding: 15px;
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+      }
+      ul {
+        display: none;
+        position: absolute;
+        width: 175%;
+        background-color: $navBgColor;
+        ul {
+          left: 100%;
+          top: 0;
+        }
+      }
+    }
+    li > a:after {
+      content: '+';
+      float: right;
+      margin-left: 5px;
+    }
+    li > a:only-child:after {
+      content: '';
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  nav {
+    ul.listItemsHidden {
+      li {
+        display: none;
+      }
+    }
+    ul {
+      display: inherit;
+      &:first-child:before {
+        background-color: $navBgColor;
+        content: 'MENU';
+        display: block;
+        padding: 1rem;
+        color: #fff;
+        text-align: right;
+      }
+      li {
+        display: list-item;
+        background-color: #aaa;
+        ul {
+          position: relative;
+          min-width: auto;
+          display: inherit;
+          border-top: 2px solid #999;
+          li {
+            display: block;
+            a {
+              position: relative;
+              &:before {
+                content: '';
+                padding-left: 1.5%;
+              }
+            }
+            ul {
+              left: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}

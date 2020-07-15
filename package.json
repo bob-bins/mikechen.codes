@@ -1,0 +1,48 @@
+{
+  "scripts": {
+    "build": "concurrently 'webpack' 'tsc'",
+    "start": "node dist/server/server.js",
+    "_comment": "The `start` command is required by Heroku",
+    "watch": "concurrently 'yarn watch:ui' 'yarn watch:server'",
+    "watch:server": "tsc-watch --onSuccess 'yarn start'",
+    "watch:ui": "webpack --watch"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@hyperapp/html": "^1.2.2",
+    "@types/bootstrap": "^4.5.0",
+    "@types/koa": "^2.11.3",
+    "@types/koa-logger": "^3.1.1",
+    "@types/koa-mount": "^4.0.0",
+    "@types/koa-router": "^7.4.1",
+    "@types/koa-static": "^4.0.1",
+    "@types/node": "^14.0.27",
+    "awesome-typescript-loader": "^5.2.1",
+    "bootstrap": "^4.5.0",
+    "concurrently": "^5.2.0",
+    "copy-webpack-plugin": "^6.0.3",
+    "css-loader": "^4.2.1",
+    "file-loader": "^6.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "hyperapp": "^2.0.5",
+    "koa": "^2.13.0",
+    "koa-logger": "^3.2.1",
+    "koa-mount": "^4.0.0",
+    "koa-router": "^9.1.0",
+    "koa-static": "^5.0.0",
+    "rxjs": "^6.6.0",
+    "source-map-loader": "^1.0.1",
+    "style-loader": "^1.2.1",
+    "ts-node": "^8.10.2",
+    "tsc": "^1.20150623.0",
+    "tsc-watch": "^4.2.9",
+    "typescript": "^3.9.6",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "devDependencies": {
+    "sass": "^1.26.10",
+    "sass-loader": "^10.0.2"
+  }
+}
