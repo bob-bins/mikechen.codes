@@ -17,15 +17,19 @@ const router = new Router().get("/api/hi", async (ctx, next) => {
 })
 
 new Koa()
-  .use(
-    sslify({
-      resolver: ctx =>
-        ctx.hostname == "localhost" ? false : xForwardedProtoResolver(ctx) || httpsResolver(ctx),
-    })
-  )
+  .use(async (ctx, next) => {
+    if (ctx.hostname == "127.0.0.1" || ctx.hostname == "localhost") {
+      await next()
+    }
+    else {
+      sslify({
+        resolver: ctx => xForwardedProtoResolver(ctx) || httpsResolver(ctx),
+      })(ctx, next)
+    }
+  })
   .use(mount(rootPath, static_pages))
   .use(mount(conwayPath, static_pages)) //todo: is it possible to serve static_pages on a regex route match?
   .use(router.routes())
   .use(router.allowedMethods())
   .use(Logger())
-  .listen(port, () => console.log(`http://localhost:${port}`))
+  .listen(port, () => console.log(`http://127.0.0.1:${port}`))
