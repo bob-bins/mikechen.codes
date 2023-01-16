@@ -2,14 +2,14 @@ import Koa from "koa"
 import Logger from "koa-logger"
 import mount from "koa-mount"
 import Router from "koa-router"
-import sslify, { xForwardedProtoResolver, httpsResolver } from "koa-sslify"
+import sslify, { httpsResolver, xForwardedProtoResolver } from "koa-sslify"
 import serve from "koa-static"
-import { nextTick } from "process"
+import path from "path"
 import { conwayPath } from "../ui/conwayGameOfLife/conwayPath"
 import { rootPath } from "../ui/frontPage/rootPath"
 import { port } from "./port"
 
-const static_pages = new Koa().use(serve("./dist/ui"))
+const static_pages = new Koa().use(serve(path.join(__dirname, "../ui")))
 const router = new Router().get("/api/hi", async (ctx, next) => {
   ctx.status = 200
   ctx.body = "oh hello!!"

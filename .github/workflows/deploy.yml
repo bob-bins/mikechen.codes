@@ -1,18 +1,23 @@
-name: Deploy to Heroku
+name: Deploy to GitHub Pages
+
 on:
   push:
-    branches: [ main ]
-env: 
-  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-  HEROKU_APP_NAME: mike-chen-codes
+    branches: ["workflow-test"]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Git Checkout
-      uses: actions/checkout@v1
-    - name: Heroku release
-      run: |
-        heroku container:login
-        heroku container:push -a $HEROKU_APP_NAME web
-        heroku container:release -a $HEROKU_APP_NAME web
+      - uses: actions/checkout@v3
+      - run: |
+          yarn
+          yarn build
+      - uses: actions/upload-pages-artifact@v1.0.7
+        with:
+          path: dist/ui
+          name: github-pages
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1.2.3
