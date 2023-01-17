@@ -1,1 +1,1 @@
-export const conwayPath = "/conway"
+export const conwayHash = "#conway"

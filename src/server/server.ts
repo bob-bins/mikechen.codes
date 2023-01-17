@@ -5,7 +5,7 @@ import Router from "koa-router"
 import sslify, { httpsResolver, xForwardedProtoResolver } from "koa-sslify"
 import serve from "koa-static"
 import path from "path"
-import { conwayPath } from "../ui/conwayGameOfLife/conwayPath"
+import { conwayHash } from "../ui/conwayGameOfLife/conwayPath"
 import { rootPath } from "../ui/frontPage/rootPath"
 import { port } from "./port"
 
@@ -28,7 +28,7 @@ new Koa()
     }
   })
   .use(mount(rootPath, static_pages))
-  .use(mount(conwayPath, static_pages)) //todo: is it possible to serve static_pages on a regex route match?
+  .use(mount(conwayHash, static_pages)) //todo: is it possible to serve static_pages on a regex route match?
   .use(router.routes())
   .use(router.allowedMethods())
   .use(Logger())
