@@ -1,6 +1,6 @@
-import {range} from "../../utils/range"
-import { isBetweenInclusive } from "../../utils/isBetweenInclusive"
-import { Integer } from "../../utils/Integer"
+import {range} from "../utils/range"
+import { isBetweenInclusive } from "../utils/isBetweenInclusive"
+import { Integer } from "../utils/Integer"
 
 export const live = 1
 export const dead = 0

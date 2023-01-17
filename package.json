@@ -1,11 +1,7 @@
 {
   "scripts": {
-    "build": "concurrently 'webpack' 'tsc'",
-    "start": "node dist/server/server.js",
-    "_comment": "The `start` command is required by Heroku",
-    "watch": "concurrently 'yarn watch:ui' 'yarn watch:server'",
-    "watch:server": "tsc-watch --onSuccess 'yarn start'",
-    "watch:ui": "webpack --watch"
+    "build": "webpack",
+    "dev": "webpack-dev-server"
   },
   "license": "UNLICENSED",
   "dependencies": {
@@ -20,7 +16,6 @@
     "@types/node": "^14.0.27",
     "awesome-typescript-loader": "^5.2.1",
     "bootstrap": "^4.5.0",
-    "concurrently": "^5.2.0",
     "copy-webpack-plugin": "^6.0.3",
     "css-loader": "^4.2.1",
     "file-loader": "^6.0.0",

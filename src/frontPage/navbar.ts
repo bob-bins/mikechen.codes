@@ -1,7 +1,7 @@
 import { a, li, nav, ul } from "@hyperapp/html"
 import { text } from "hyperapp"
 import { AppState } from ".."
-import { conwayHash } from "../conwayGameOfLife/conwayPath"
+import { conwayHash } from "../conwayGameOfLife/conwayHash"
 import { contactMeId } from "./contactMe"
 import { practicesId } from "./myPractices"
 import { rootPath } from "./rootPath"

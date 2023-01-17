@@ -1,7 +1,7 @@
 import { main } from "@hyperapp/html"
 import { app } from "hyperapp"
 import { timer } from "rxjs"
-import { conwayHash } from "./conwayGameOfLife/conwayPath"
+import { conwayHash } from "./conwayGameOfLife/conwayHash"
 import { conwaysGameOfLife, incrementConwayTime } from "./conwayGameOfLife/conwaysGameOfLife"
 import { aboutMe, phrasesThatDescribeMe, phraseUpdateIntervalSub, updatePhrase } from "./frontPage/aboutMe"
 import { contactMe } from "./frontPage/contactMe"
@@ -64,17 +64,6 @@ const intervalCounterSub = (dispatch, props) => {
 app({
   init: initialState,
   subscriptions: (state: AppState) => [
-    ...(window.location.pathname == "/" && window.location.hash != conwayHash
-      ? [
-          [
-            phraseUpdateIntervalSub,
-            {
-              intervalMs: 2000,
-              action: updatePhrase,
-            },
-          ],
-        ]
-      : []),
     ...(window.location.hash == conwayHash
       ? [
           [
@@ -82,6 +71,17 @@ app({
             {
               intervalMs: 100,
               action: incrementConwayTime,
+            },
+          ],
+        ]
+      : []),
+    ...(window.location.pathname == "/"
+      ? [
+          [
+            phraseUpdateIntervalSub,
+            {
+              intervalMs: 2000,
+              action: updatePhrase,
             },
           ],
         ]

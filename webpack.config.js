@@ -1,14 +1,14 @@
 const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
-const uiDirPath = "dist/ui"
+// const uiDirPath = "dist/"
 
 module.exports = {
-  entry: "./src/ui/index.ts",
+  entry: "./src/index.ts",
   target: "web",
   mode: "production",
   output: {
-    path: path.resolve(__dirname, uiDirPath),
-    filename: "bundle.js",
+    // path: path.resolve(__dirname, uiDirPath),
+    // filename: "bundle.js",
   },
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
@@ -47,7 +47,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src", "ui", "index.html"),
+      template: path.resolve(__dirname, "src", "index.html"),
     }),
   ],
 };

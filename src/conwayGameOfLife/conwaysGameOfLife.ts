@@ -1,6 +1,6 @@
 import { canvas, div, input, span, button } from "@hyperapp/html"
 import { text } from "hyperapp"
-import { range } from "../../utils/range"
+import { range } from "../utils/range"
 import { AppState } from "../index"
 import { getCellState, live } from "./board"
 
