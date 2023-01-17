@@ -1,7 +1,7 @@
 import { a, li, nav, ul } from "@hyperapp/html"
 import { text } from "hyperapp"
 import { AppState } from ".."
-import { conwayPath } from "../conwayGameOfLife/conwayPath"
+import { conwayHash } from "../conwayGameOfLife/conwayPath"
 import { contactMeId } from "./contactMe"
 import { practicesId } from "./myPractices"
 import { rootPath } from "./rootPath"
@@ -26,7 +26,7 @@ export const navbar = (state: AppState) =>
         li({}, [
           a({}, text("Misc Stuff")),
           ul({}, [
-            li({}, [a({ href: conwayPath }, text("Conway's Game of Life"))]),
+            li({}, [a({ href: conwayHash }, text("Conway's Game of Life"))]),
             li({}, [
               a(
                 { href: "https://github.com/bob-bins/mikechen.codes", target: "_blank" },
