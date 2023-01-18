@@ -19,7 +19,7 @@ export const navbar = (state: AppState) =>
         class: `${state.navbarDropdownExpandedInMobile ? "" : "listItemsHidden"}`,
       },
       [
-        li({ class: "text-monospace" }, [a({ href: rootPath }, text(rootPath))]),
+        li({ class: "text-monospace" }, [a({ href: `${rootPath}#` }, text(rootPath))]),
         li({}, [a({ href: `${rootPath}#${practicesId}` }, text("Practices"))]),
         li({}, [a({ href: `${rootPath}#${technologiesId}` }, text("Technologies"))]),
         li({}, [a({ href: `${rootPath}#${contactMeId}` }, text("Contact"))]),
