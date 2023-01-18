@@ -1,15 +1,10 @@
 const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
-// const uiDirPath = "dist/"
 
 module.exports = {
   entry: "./src/index.ts",
   target: "web",
   mode: "production",
-  output: {
-    // path: path.resolve(__dirname, uiDirPath),
-    // filename: "bundle.js",
-  },
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
   },
@@ -17,7 +12,7 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|tsx)$/,
-        loader: "awesome-typescript-loader",
+        loader: "ts-loader",
       },
       {
         enforce: "pre",
@@ -28,10 +23,6 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg)$/i,
         loader: 'file-loader',
       },
-      // {
-      //   test: /\.css$/,
-      //   use: ['style-loader', 'css-loader']
-      // }
       {
         test: /\.s[ac]ss$/i,
         use: [
