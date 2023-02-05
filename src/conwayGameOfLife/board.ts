@@ -4,15 +4,13 @@ import { Integer } from "../utils/Integer"
 
 export const live = "O"
 export const dead = "."
-type CellState = typeof live | typeof dead
+export type CellState = typeof live | typeof dead
 type CellStateFn = (x: Integer, y: Integer) => CellState
 
 const initialCellStateFn: CellStateFn = () => (Math.random() > 0.5 ? live : dead)
 
 type UniverseDimensions = {
-  minRow: Integer
   maxRow: Integer
-  minCol: Integer
   maxCol: Integer
 }
 
@@ -20,19 +18,19 @@ const cellState = (
   time: Integer,
   row: Integer,
   col: Integer,
-  { minRow, maxRow, minCol, maxCol }: UniverseDimensions
+  { maxRow, maxCol }: UniverseDimensions
 ): CellState => {
   row =
-    row < minRow
-      ? maxRow + 1 - ((minRow - row) % (maxRow - minRow))
+    row < 0
+      ? maxRow + 1 - ((0 - row) % (maxRow - 0))
       : row > maxRow
-      ? minRow - 1 + ((row - maxRow) % (maxRow - minRow))
+      ? 0 - 1 + ((row - maxRow) % (maxRow - 0))
       : row
   col =
-    col < minCol
-      ? maxCol + 1 - ((minCol - col) % (maxCol - minCol))
+    col < 0
+      ? maxCol + 1 - ((0 - col) % (maxCol - 0))
       : col > maxCol
-      ? minCol - 1 + ((col - maxCol) % (maxCol - minCol))
+      ? 0 - 1 + ((col - maxCol) % (maxCol - 0))
       : col
   const adjacentLiveCount = [
     [row - 1, col - 1],
@@ -44,10 +42,10 @@ const cellState = (
     [row + 1, col],
     [row + 1, col + 1],
   ].reduce(
-    (p, [x, y]) => p + (getCellState(time - 1, x, y, { minRow, maxRow, minCol, maxCol }) == live ? 1 : 0),
+    (p, [x, y]) => p + (getCellState(time - 1, x, y, { maxRow, maxCol }) == live ? 1 : 0),
     0
   )
-  return getCellState(time - 1, row, col, { minRow, maxRow, minCol, maxCol }) == live
+  return getCellState(time - 1, row, col, { maxRow, maxCol }) == live
     ? isBetweenInclusive(2, 3)(adjacentLiveCount)
       ? live
       : dead
@@ -56,7 +54,6 @@ const cellState = (
     : dead
 }
 
-// export const _cellStateCache:{[key:number]:{[key:string]:CellState}} = {}
 export const _cellStateCache: {
   [time: Integer]: {
     [row: Integer]: {
@@ -75,42 +72,40 @@ export const getCellState = (
   time: Integer,
   row: Integer,
   col: Integer,
-  { minRow, maxRow, minCol, maxCol }: UniverseDimensions
+  { maxRow, maxCol }: UniverseDimensions // Cells outside the Universe bounds are "wrapped"
 ): CellState => {
   row =
-    row < minRow
-      ? maxRow + 1 - ((minRow - row) % (maxRow - minRow))
+    row < 0
+      ? maxRow + 1 - ((0 - row) % (maxRow - 0))
       : row > maxRow
-      ? minRow - 1 + ((row - maxRow) % (maxRow - minRow))
+      ? 0 - 1 + ((row - maxRow) % (maxRow - 0))
       : row
   col =
-    col < minCol
-      ? maxCol + 1 - ((minCol - col) % (maxCol - minCol))
+    col < 0
+      ? maxCol + 1 - ((0 - col) % (maxCol - 0))
       : col > maxCol
-      ? minCol - 1 + ((col - maxCol) % (maxCol - minCol))
+      ? 0 - 1 + ((col - maxCol) % (maxCol - 0))
       : col
   return (
     _cellStateCache[time]?.[row]?.[col] ??
     (time == 0
       ? setCellState(0, row, col, initialCellStateFn(row, col))
-      : setCellState(time, row, col, cellState(time, row, col, { minRow, maxRow, minCol, maxCol })))
+      : setCellState(time, row, col, cellState(time, row, col, { maxRow, maxCol })))
   )
 }
 
 const drawGridForDebuggingPurposes = (
   time: Integer,
-  minRow: Integer,
-  minCol: Integer,
   maxRow: Integer,
   maxCol: Integer
 ) => {
-  range(minRow, maxRow)
-    .map(rowIndex => range(minCol, maxCol).map(colIndex => [rowIndex, colIndex]))
+  range(0, maxRow)
+    .map(rowIndex => range(0, maxCol).map(colIndex => [rowIndex, colIndex]))
     .forEach(row =>
       console.log(
         row
           .map(([rowIndex, colIndex]) =>
-            getCellState(time, rowIndex, colIndex, { minRow, maxRow, minCol, maxCol })
+            getCellState(time, rowIndex, colIndex, { maxRow, maxCol })
           )
           .join(" ")
       )
