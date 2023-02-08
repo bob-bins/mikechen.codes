@@ -1,9 +1,9 @@
 import { main } from "@hyperapp/html"
+import { every } from "@hyperapp/time"
 import { app } from "hyperapp"
-import { timer } from "rxjs"
 import { conwayHash } from "./conwayGameOfLife/conwayHash"
 import { conwaysGameOfLife, incrementConwayTime } from "./conwayGameOfLife/conwaysGameOfLife"
-import { aboutMe, phrasesThatDescribeMe, phraseUpdateIntervalSub, updatePhrase } from "./frontPage/aboutMe"
+import { aboutMe, updatePhrase } from "./frontPage/aboutMe"
 import { contactMe } from "./frontPage/contactMe"
 import { myPractices } from "./frontPage/myPractices"
 import { navbar } from "./frontPage/navbar"
@@ -15,7 +15,7 @@ import "./style.scss"
 export type AppState = {
   mobileNavbarExpanded: boolean
   navbarDropdownExpandedInMobile: boolean
-  phraseDescribingMe: string
+  phraseDescribingMeIndex: number
   conway: {
     paused: boolean
     pausedDueToTimerDrag: boolean
@@ -37,7 +37,7 @@ export type AppState = {
 const initialState: AppState = {
   mobileNavbarExpanded: false,
   navbarDropdownExpandedInMobile: false,
-  phraseDescribingMe: phrasesThatDescribeMe[0],
+  phraseDescribingMeIndex: 0,
   conway: {
     paused: false,
     pausedDueToTimerDrag: false,
@@ -56,30 +56,12 @@ const initialState: AppState = {
   },
 }
 
-const intervalCounterSub = (dispatch, props) => {
-  const sub = timer(props.intervalMs, props.intervalMs).subscribe(i => dispatch(props.action, i))
-  return () => sub.unsubscribe()
-}
-
 app({
   init: initialState,
-  subscriptions: (state: AppState) =>
-    [
-      window.location.hash == conwayHash && [
-        intervalCounterSub,
-        {
-          intervalMs: 100,
-          action: incrementConwayTime,
-        },
-      ],
-      window.location.pathname == "/" && [
-        phraseUpdateIntervalSub,
-        {
-          intervalMs: 2000,
-          action: updatePhrase,
-        },
-      ],
-    ] as any,
+  subscriptions: (state: AppState) => [
+    window.location.hash == conwayHash && every(100, incrementConwayTime),
+    window.location.pathname == "/" && every(2000, updatePhrase),
+  ],
   view: (state: AppState) =>
     main(
       {},

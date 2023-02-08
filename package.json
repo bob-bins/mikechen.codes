@@ -6,12 +6,12 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@hyperapp/html": "^2.0.0",
+    "@hyperapp/time": "^1.0.0",
     "@types/node": "^18.11.18",
     "css-loader": "^4.2.1",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "hyperapp": "^2.0.22",
-    "rxjs": "^6.6.0",
     "sass": "^1.26.10",
     "sass-loader": "^10.0.2",
     "source-map-loader": "^1.0.1",

@@ -1,10 +1,9 @@
-import { div, h1, img, p, span, br } from "@hyperapp/html"
+import { br, div, h1, img, p, span } from "@hyperapp/html"
 import { text } from "hyperapp"
-import { timer } from "rxjs"
 import { AppState } from ".."
 import mike_chen_pic from "./mike_chen_pic.png"
 
-const avatarWithCaption = (phraseDescribingMe:string) =>
+const avatarWithCaption = (phraseDescribingMe: string) =>
   div({ class: "container text-center align-self-center mr-lg-0", style: { width: "450px" } }, [
     img({
       class: "rounded-circle",
@@ -45,7 +44,7 @@ const aboutMeDescription = div(
 export const aboutMeId = "About"
 export const aboutMe = (state: AppState) =>
   div({ class: "jumbotron d-flex flex-wrap flex-shrink bg-dark", id: aboutMeId }, [
-    avatarWithCaption(state.phraseDescribingMe),
+    avatarWithCaption(phrasesThatDescribeMe[state.phraseDescribingMeIndex]),
     aboutMeDescription,
   ])
 
@@ -58,14 +57,7 @@ export const phrasesThatDescribeMe = [
   "big nerd",
 ]
 
-export const updatePhrase = (state: AppState, phraseDescribingMe): AppState => ({
+export const updatePhrase = (state: AppState): AppState => ({
   ...state,
-  phraseDescribingMe,
+  phraseDescribingMeIndex: (state.phraseDescribingMeIndex + 1) % phrasesThatDescribeMe.length,
 })
-
-export const phraseUpdateIntervalSub = (dispatch, props) => {
-  const sub = timer(0, props.intervalMs).subscribe(i =>
-    dispatch(props.action, phrasesThatDescribeMe[i % phrasesThatDescribeMe.length])
-  )
-  return () => sub.unsubscribe()
-}
