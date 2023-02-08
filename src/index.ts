@@ -63,22 +63,23 @@ const intervalCounterSub = (dispatch, props) => {
 
 app({
   init: initialState,
-  subscriptions: (state: AppState) => [
+  subscriptions: (state: AppState) =>
     [
-      intervalCounterSub,
-      {
-        intervalMs: window.location.hash == conwayHash ? 100 : undefined,
-        action: incrementConwayTime,
-      },
-    ],
-    [
-      phraseUpdateIntervalSub,
-      {
-        intervalMs: window.location.pathname == "/" ? 2000 : undefined,
-        action: updatePhrase,
-      },
-    ]
-  ] as any,
+      window.location.hash == conwayHash && [
+        intervalCounterSub,
+        {
+          intervalMs: 100,
+          action: incrementConwayTime,
+        },
+      ],
+      window.location.pathname == "/" && [
+        phraseUpdateIntervalSub,
+        {
+          intervalMs: 2000,
+          action: updatePhrase,
+        },
+      ],
+    ] as any,
   view: (state: AppState) =>
     main(
       {},

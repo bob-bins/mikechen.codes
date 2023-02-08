@@ -41,10 +41,7 @@ const cellState = (
     [row + 1, col - 1],
     [row + 1, col],
     [row + 1, col + 1],
-  ].reduce(
-    (p, [x, y]) => p + (getCellState(time - 1, x, y, { maxRow, maxCol }) == live ? 1 : 0),
-    0
-  )
+  ].reduce((p, [x, y]) => p + (getCellState(time - 1, x, y, { maxRow, maxCol }) == live ? 1 : 0), 0)
   return getCellState(time - 1, row, col, { maxRow, maxCol }) == live
     ? isBetweenInclusive(2, 3)(adjacentLiveCount)
       ? live
@@ -94,19 +91,13 @@ export const getCellState = (
   )
 }
 
-const drawGridForDebuggingPurposes = (
-  time: Integer,
-  maxRow: Integer,
-  maxCol: Integer
-) => {
+const drawGridForDebuggingPurposes = (time: Integer, maxRow: Integer, maxCol: Integer) => {
   range(0, maxRow)
     .map(rowIndex => range(0, maxCol).map(colIndex => [rowIndex, colIndex]))
     .forEach(row =>
       console.log(
         row
-          .map(([rowIndex, colIndex]) =>
-            getCellState(time, rowIndex, colIndex, { maxRow, maxCol })
-          )
+          .map(([rowIndex, colIndex]) => getCellState(time, rowIndex, colIndex, { maxRow, maxCol }))
           .join(" ")
       )
     )
