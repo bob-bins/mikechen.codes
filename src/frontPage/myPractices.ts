@@ -25,16 +25,16 @@ export const myPractices = () =>
         often in opposition to innovation.`
       ),
       practicesCard(
-        i({ class: "fa-solid fa-hand-holding-heart mr-1" }, []),
-        "Understanding through empathy",
-        `Empathy is a must for understanding others' perspectives, which is a prerequisite to 
-        building both a product the user loves and a team that loves to build it.`
-      ),
-      practicesCard(
         i({ class: "fa-solid fa-book-open" }, []),
         "Lifelong student and teacher",
         `To stop learning is to stop growing.
         And one of the most fulfilling ways to use knowledge is to share it!`
+      ),
+      practicesCard(
+        i({ class: "fa-solid fa-hand-holding-heart mr-1" }, []),
+        "Understanding through empathy",
+        `Empathy is a must for understanding others' perspectives, which is a prerequisite to 
+        building both a product the user loves and a team that loves to build it.`
       ),
       practicesCard(
         i({ class: "fa-solid fa-cubes-stacked mr-1" }, []),
