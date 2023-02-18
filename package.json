@@ -12,6 +12,7 @@
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "hyperapp": "^2.0.22",
+    "micro-memoize": "^4.0.14",
     "sass": "^1.26.10",
     "sass-loader": "^10.0.2",
     "source-map-loader": "^1.0.1",

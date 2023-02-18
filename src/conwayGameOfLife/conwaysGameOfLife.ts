@@ -2,10 +2,40 @@ import { canvas, div, input, span, button } from "@hyperapp/html"
 import { text } from "hyperapp"
 import { range } from "../utils/range"
 import { AppState } from "../index"
-import { CellState, getCellState, live } from "./board"
+import { CellState, clearCellStateCache, dead, getCellState, live } from "./board"
 import { isMobileDevice } from "../utils/isMobileDevice"
+import { uploadTextFromBrowser } from "../utils/uploadTextFromBrowser"
+import memoize from "micro-memoize"
+
+export const numOfCols = 500
+export const numOfRows = 500
 
 const stringifyConwayBoard = (state: Array<Array<CellState>>) => state.map(row => row.join("")).join("\n")
+
+const parseConwayBoard = memoize((stringifiedState: string): Array<Array<CellState>> => {
+  const rows = stringifiedState
+    .split("\n")
+    .slice(0, numOfRows) // todo: remove if letting users upload a larger board
+    .filter(row => row[0] != "!")
+    .map(row => row.replaceAll(/[^O.]/g, "."))
+  return [
+    ...rows.map(row =>
+      row
+        .padEnd(numOfCols, dead)
+        .split("")
+        .slice(0, numOfCols) // todo: remove if letting users upload a larger board
+        .map(c => c as CellState)
+    ),
+    ...Array(numOfRows - rows.length)
+      .fill(undefined)
+      .map(_ =>
+        ""
+          .padEnd(numOfCols, dead)
+          .split("")
+          .map(c => c as CellState)
+      ),
+  ]
+})
 
 export const conwaysGameOfLife = (state: AppState) => {
   const conwayElementId = "conway"
@@ -17,20 +47,24 @@ export const conwaysGameOfLife = (state: AppState) => {
     htmlCanvas.height = window.innerHeight
 
     const cellWidth = Math.ceil(state.conway.cellWidthPx)
-    const numOfCols = 500
-    const numOfRows = 500
+
     const minDisplayedColNum = state.conway.centerX - Math.ceil(state.conway.draggedX / cellWidth)
     const minDisplayedRowNum = state.conway.centerY - Math.ceil(state.conway.draggedY / cellWidth)
 
-    const conwayState = range(minDisplayedRowNum, minDisplayedRowNum + numOfRows).map(rowIndex =>
-      range(minDisplayedColNum, minDisplayedColNum + numOfCols).map(colIndex =>
-        getCellState(state.conway.time, rowIndex, colIndex, {
-          maxRow: numOfRows,
-          maxCol: numOfCols,
-        })
+    const conwayState = range(minDisplayedRowNum, minDisplayedRowNum + numOfRows - 1).map(rowIndex =>
+      range(minDisplayedColNum, minDisplayedColNum + numOfCols - 1).map(colIndex =>
+        getCellState(
+          state.conway.time,
+          rowIndex,
+          colIndex,
+          {
+            maxRow: numOfRows - 1,
+            maxCol: numOfCols - 1,
+          },
+          state.conway.initialBoardFn
+        )
       )
     )
-    stringifiedConwayBoard = stringifyConwayBoard(conwayState)
 
     const ctx = htmlCanvas.getContext("2d")
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -42,7 +76,28 @@ export const conwaysGameOfLife = (state: AppState) => {
         }
       })
     )
+
+    stringifiedConwayBoard = stringifyConwayBoard(conwayState)
   }
+
+  const uploadConwayState = async (dispatch, payload) => {
+    const uploadedText = await uploadTextFromBrowser()
+    requestAnimationFrame(() => {
+      dispatch((state: AppState): AppState => {
+        clearCellStateCache()
+        return {
+          ...state,
+          conway: {
+            ...state.conway,
+            initialBoardFn: (row: number, col: number) => parseConwayBoard(uploadedText)[row][col],
+            time: 0,
+            maxTimeReached: 0,
+          },
+        }
+      })
+    })
+  }
+
   return div({}, [
     div({ class: "py-2 conwayControls" }, [
       div({ class: "d-flex col-12", style: { "white-space": "nowrap", "line-height": "26px" } }, [
@@ -51,8 +106,17 @@ export const conwaysGameOfLife = (state: AppState) => {
               span({ class: "mr-2" }, [
                 button(
                   {
+                    class: `btn btn-primary fas fa-upload`,
+                    title: `Upload Conway Board state. Takes a multiline text file with two valid characters: "." represents "dead" and "O" represents "alive"\n
+Maximum board size is 500x500. Extra cells are truncated.`,
+                    onclick: state => [state, uploadConwayState],
+                  },
+                  []
+                ),
+                button(
+                  {
                     class: `btn btn-primary fas fa-download`,
-                    title: "Download Conway Board state",
+                    title: `Download Conway Board state as a multiline string. "." represents "dead" and "O" represents "alive"`,
                     onclick: downloadConwayState(stringifiedConwayBoard),
                   },
                   []
@@ -126,7 +190,7 @@ const pauseDueToTimerDrag = (state: AppState) => ({
 const downloadConwayState = (content: string) => (state: AppState) => {
   const a = document.createElement("a")
   a.setAttribute("href", URL.createObjectURL(new Blob([content])))
-  a.setAttribute("download", "conwayState.txt")
+  a.setAttribute("download", "conwayState.cells")
   a.click()
   return state
 }
