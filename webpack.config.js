@@ -24,6 +24,10 @@ module.exports = {
         loader: 'file-loader',
       },
       {
+        test: /\.(cells|txt)$/i,
+        loader: 'raw-loader',
+      },
+      {
         test: /\.s[ac]ss$/i,
         use: [
           // Creates `style` nodes from JS strings

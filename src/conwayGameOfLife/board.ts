@@ -1,13 +1,16 @@
-import { range } from "../utils/range"
-import { isBetweenInclusive } from "../utils/isBetweenInclusive"
 import { Integer } from "../utils/Integer"
+import { isBetweenInclusive } from "../utils/isBetweenInclusive"
+import { range } from "../utils/range"
+import { parseConwayBoard } from "./conwaysGameOfLife"
+import initialConwayState from "./initialConwayState.cells"
 
 export const live = "O"
 export const dead = "."
 export type CellState = typeof live | typeof dead
 export type CellStateFn = (row: Integer, col: Integer) => CellState
 
-const randomCellState: CellStateFn = () => (Math.random() > 0.5 ? live : dead)
+const defaultInitialState: CellStateFn = (row: number, col: number) =>
+  parseConwayBoard(initialConwayState)[row][col]
 
 type UniverseDimensions = {
   maxRow: Integer
@@ -63,7 +66,7 @@ export const clearCellStateCache = () => {
   _cellStateCache = {}
 }
 
-export const clearCellStateCacheAtTime = (time:Integer) => {
+export const clearCellStateCacheAtTime = (time: Integer) => {
   delete _cellStateCache[time]
 }
 
@@ -78,7 +81,7 @@ export const getCellState = (
   row: Integer,
   col: Integer,
   { maxRow, maxCol }: UniverseDimensions, // Cells outside the Universe bounds are "wrapped"
-  initialCellStateFn: CellStateFn = randomCellState
+  initialCellStateFn: CellStateFn = defaultInitialState
 ): CellState => {
   row =
     row < 0
@@ -92,13 +95,6 @@ export const getCellState = (
       : col > maxCol
       ? 0 - 1 + ((col - maxCol) % (maxCol - 0))
       : col
-  if (time == 0) {
-    try {
-      initialCellStateFn(row, col)
-    } catch(e) {
-      console.log(row, col, e)
-    }
-  }
   return (
     _cellStateCache[time]?.[row]?.[col] ??
     (time == 0

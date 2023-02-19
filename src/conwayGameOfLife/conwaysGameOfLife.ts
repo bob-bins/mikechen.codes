@@ -10,7 +10,7 @@ import memoize from "micro-memoize"
 export const numOfCols = 500
 export const numOfRows = 500
 
-const parseConwayBoard = memoize((stringifiedState: string): Array<Array<CellState>> => {
+export const parseConwayBoard = memoize((stringifiedState: string): Array<Array<CellState>> => {
   const rows = stringifiedState
     .split("\n")
     .slice(0, numOfRows) // todo: remove if letting users upload a larger board
