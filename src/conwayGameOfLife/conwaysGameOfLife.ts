@@ -10,8 +10,6 @@ import memoize from "micro-memoize"
 export const numOfCols = 500
 export const numOfRows = 500
 
-const stringifyConwayBoard = (state: Array<Array<CellState>>) => state.map(row => row.join("")).join("\n")
-
 const parseConwayBoard = memoize((stringifiedState: string): Array<Array<CellState>> => {
   const rows = stringifiedState
     .split("\n")
@@ -40,7 +38,6 @@ const parseConwayBoard = memoize((stringifiedState: string): Array<Array<CellSta
 export const conwaysGameOfLife = (state: AppState) => {
   const conwayElementId = "conway"
   const htmlCanvas = <HTMLCanvasElement>document.getElementById(conwayElementId)
-  let stringifiedConwayBoard: string
   if (htmlCanvas) {
     htmlCanvas.onwheel = e => e.preventDefault()
     htmlCanvas.width = window.innerWidth
@@ -51,7 +48,7 @@ export const conwaysGameOfLife = (state: AppState) => {
     const minDisplayedColNum = state.conway.centerX - Math.ceil(state.conway.draggedX / cellWidth)
     const minDisplayedRowNum = state.conway.centerY - Math.ceil(state.conway.draggedY / cellWidth)
 
-    const conwayState = range(minDisplayedRowNum, minDisplayedRowNum + numOfRows - 1).map(rowIndex =>
+    const displayedConwayState = range(minDisplayedRowNum, minDisplayedRowNum + numOfRows - 1).map(rowIndex =>
       range(minDisplayedColNum, minDisplayedColNum + numOfCols - 1).map(colIndex =>
         getCellState(
           state.conway.time,
@@ -68,7 +65,7 @@ export const conwaysGameOfLife = (state: AppState) => {
 
     const ctx = htmlCanvas.getContext("2d")
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    conwayState.forEach((row, rowIndex) =>
+    displayedConwayState.forEach((row, rowIndex) =>
       row.forEach((state, colIndex) => {
         if (state == live) {
           ctx.fillStyle = "rgb(255, 255, 255)"
@@ -76,8 +73,6 @@ export const conwaysGameOfLife = (state: AppState) => {
         }
       })
     )
-
-    stringifiedConwayBoard = stringifyConwayBoard(conwayState)
   }
 
   const uploadConwayState = async (dispatch, payload) => {
@@ -93,6 +88,8 @@ export const conwaysGameOfLife = (state: AppState) => {
             time: 0,
             maxTimeReached: 0,
             minTime: 0,
+            draggedX: 0,
+            draggedY: 0,
           },
         }
       })
@@ -118,7 +115,7 @@ Maximum board size is 500x500. Extra cells are truncated.`,
                   {
                     class: `btn btn-primary fas fa-download`,
                     title: `Download Conway Board state as a multiline string. "." represents "dead" and "O" represents "alive"`,
-                    onclick: downloadConwayState(stringifiedConwayBoard),
+                    onclick: downloadConwayState,
                   },
                   []
                 ),
@@ -189,9 +186,20 @@ const pauseDueToTimerDrag = (state: AppState) => ({
   },
 })
 
-const downloadConwayState = (content: string) => (state: AppState) => {
+const downloadConwayState = (state: AppState) => {
+  const stringifiedConwayBoard = range(0, numOfRows)
+    .map(row =>
+      range(0, numOfCols).map(col =>
+        getCellState(state.conway.time, row, col, {
+          maxRow: numOfRows - 1,
+          maxCol: numOfCols - 1,
+        })
+      )
+    )
+    .map(row => row.join(""))
+    .join("\n")
   const a = document.createElement("a")
-  a.setAttribute("href", URL.createObjectURL(new Blob([content])))
+  a.setAttribute("href", URL.createObjectURL(new Blob([stringifiedConwayBoard])))
   a.setAttribute("download", "conwayState.cells")
   a.click()
   return state
