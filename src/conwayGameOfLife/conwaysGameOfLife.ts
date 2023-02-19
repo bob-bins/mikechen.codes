@@ -2,7 +2,7 @@ import { canvas, div, input, span, button } from "@hyperapp/html"
 import { text } from "hyperapp"
 import { range } from "../utils/range"
 import { AppState } from "../index"
-import { CellState, clearCellStateCache, dead, getCellState, live } from "./board"
+import { CellState, clearCellStateCache, clearCellStateCacheAtTime, dead, getCellState, live } from "./board"
 import { isMobileDevice } from "../utils/isMobileDevice"
 import { uploadTextFromBrowser } from "../utils/uploadTextFromBrowser"
 import memoize from "micro-memoize"
@@ -92,6 +92,7 @@ export const conwaysGameOfLife = (state: AppState) => {
             initialBoardFn: (row: number, col: number) => parseConwayBoard(uploadedText)[row][col],
             time: 0,
             maxTimeReached: 0,
+            minTime: 0,
           },
         }
       })
@@ -145,12 +146,13 @@ Maximum board size is 500x500. Extra cells are truncated.`,
             type: "range",
             class: "custom-range pt-2",
             style: { flex: 1 },
-            min: 0,
+            min: state.conway.minTime,
             max: state.conway.maxTimeReached,
             value: state.conway.time,
             oninput: setConwayTime,
             onmousedown: pauseDueToTimerDrag,
             onmouseup: unpauseDueToTimerDrag,
+            onfocusout: unpauseDueToTimerDrag,
           },
           []
         ),
@@ -219,17 +221,27 @@ const setConwayTime = (state: AppState, event): AppState => ({
   },
 })
 
-export const incrementConwayTime = (state: AppState): AppState =>
-  state.conway.paused || state.conway.pausedDueToTimerDrag
-    ? state
-    : {
-        ...state,
-        conway: {
-          ...state.conway,
-          time: state.conway.time + 1,
-          maxTimeReached: Math.max(state.conway.time + 1, state.conway.maxTimeReached),
-        },
-      }
+export const maxCachedTimeRange = 500
+
+export const incrementConwayTime = (state: AppState): AppState => {
+  if (state.conway.paused || state.conway.pausedDueToTimerDrag) {
+    return state
+  } else {
+    const newState = {
+      ...state,
+      conway: {
+        ...state.conway,
+        time: state.conway.time + 1,
+        maxTimeReached: Math.max(state.conway.time + 1, state.conway.maxTimeReached),
+        minTime: Math.max(0, state.conway.maxTimeReached + 1 - maxCachedTimeRange),
+      },
+    }
+    if (newState.conway.minTime > 0 && newState.conway.minTime > state.conway.minTime) {
+      clearCellStateCacheAtTime(newState.conway.minTime - 1)
+    }
+    return newState
+  }
+}
 
 const zoomConwayGrid = (state: AppState, event): AppState => ({
   ...state,

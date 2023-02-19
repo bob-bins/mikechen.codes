@@ -22,6 +22,7 @@ export type AppState = {
     pausedDueToTimerDrag: boolean
     time: number
     maxTimeReached: number
+    minTime: number
     cellWidthPx: number
     centerX: number
     centerY: number
@@ -45,6 +46,7 @@ const initialState: AppState = {
     pausedDueToTimerDrag: false,
     time: 0,
     maxTimeReached: 0,
+    minTime: 0,
     cellWidthPx: 5,
     centerX: 0,
     centerY: 0,

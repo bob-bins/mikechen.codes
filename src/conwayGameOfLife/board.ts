@@ -63,6 +63,10 @@ export const clearCellStateCache = () => {
   _cellStateCache = {}
 }
 
+export const clearCellStateCacheAtTime = (time:Integer) => {
+  delete _cellStateCache[time]
+}
+
 const setCellState = (time: Integer, row: Integer, col: Integer, state: CellState) => {
   if (_cellStateCache[time] == undefined) _cellStateCache[time] = {}
   if (_cellStateCache[time][row] == undefined) _cellStateCache[time][row] = {}
