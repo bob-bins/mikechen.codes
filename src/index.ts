@@ -63,8 +63,8 @@ const initialState: AppState = {
 app({
   init: initialState,
   subscriptions: (state: AppState) => [
-    window.location.hash == conwayHash && every(100, incrementConwayTime),
-    window.location.pathname == "/" && every(2000, updatePhrase),
+    window.location.hash == conwayHash && every(50, incrementConwayTime),
+    window.location.hash != conwayHash && window.location.pathname == "/" && every(2000, updatePhrase),
   ],
   view: (state: AppState) =>
     main(

@@ -255,7 +255,7 @@ const zoomConwayGrid = (state: AppState, event): AppState => ({
   ...state,
   conway: {
     ...state.conway,
-    cellWidthPx: Math.max(Math.min(state.conway.cellWidthPx - event.deltaY / 30, 10), 4),
+    cellWidthPx: Math.max(Math.min(state.conway.cellWidthPx - event.deltaY / 30, 13), 3),
   },
 })
 
