@@ -2,15 +2,11 @@ import { main } from "@hyperapp/html"
 import { every } from "@hyperapp/time"
 import { app } from "hyperapp"
 import { conwaysGameOfLife } from "./conwayGameOfLife/conwaysGameOfLife"
-import { incrementConwayTime } from "./conwayGameOfLife/incrementConwayTime"
 import { CellStateFn, conwayHash } from "./conwayGameOfLife/globalSettings"
-import { aboutMe, updatePhrase } from "./frontPage/aboutMe"
-import { contactMe } from "./frontPage/contactMe"
-import { myPractices } from "./frontPage/myPractices"
+import { incrementConwayTime } from "./conwayGameOfLife/incrementConwayTime"
+import { updatePhrase } from "./frontPage/aboutMe"
+import { frontPage } from "./frontPage/frontPage"
 import { navbar } from "./frontPage/navbar"
-import { rootPath } from "./frontPage/rootPath"
-import { technologies } from "./frontPage/technologies"
-import { router } from "./router/router"
 import "./style.scss"
 
 export type AppState = {
@@ -62,23 +58,18 @@ const initialState: AppState = {
 
 app({
   init: initialState,
-  subscriptions: () => [
-    window.location.hash == conwayHash && every(50, incrementConwayTime),
+  subscriptions: (state: AppState) => [
+    window.location.hash == conwayHash &&
+      !state.conway.paused &&
+      !state.conway.pausedDueToTimerDrag &&
+      every(50, incrementConwayTime),
     window.location.hash != conwayHash && every(2000, updatePhrase),
   ],
   view: (state: AppState) =>
-    main(
-      {},
-      router([
-        {
-          hash: conwayHash,
-          view: [navbar(), conwaysGameOfLife(state)],
-        },
-        {
-          path: rootPath,
-          view: [navbar(), aboutMe(state), myPractices(), technologies(), contactMe()],
-        },
-      ])
-    ),
+    main({}, [
+      navbar(),
+      window.location.hash == conwayHash && conwaysGameOfLife(state),
+      window.location.hash != conwayHash && frontPage(state),
+    ]),
   node: document.getElementById("app"),
 })
