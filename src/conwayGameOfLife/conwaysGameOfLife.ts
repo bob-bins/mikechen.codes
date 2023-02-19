@@ -106,7 +106,7 @@ export const conwaysGameOfLife = (state: AppState) => {
                   {
                     class: `btn btn-primary fas fa-upload`,
                     title: `Upload Conway Board state. Takes a multiline text file with two valid characters: "." represents "dead" and "O" represents "alive"\n
-Maximum board size is 500x500. Extra cells are truncated.`,
+Maximum board size is ${numOfRows}x${numOfCols}. Extra cells are truncated.`,
                     onclick: state => [state, uploadConwayState],
                   },
                   []
