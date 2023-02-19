@@ -17,7 +17,7 @@ const avatarWithCaption = (phraseDescribingMe: string) =>
         text(`${phraseDescribingMe}`)
       ),
     ]),
-    br({}, []),
+    br({}),
   ])
 
 const aboutMeDescription = div(
@@ -30,7 +30,7 @@ const aboutMeDescription = div(
         culture. I am hands-on in both designing and implementing these systems with modern technologies.`
       )
     ),
-    p({}, []),
+    p({}),
     p(
       { class: "mt-3 text-white aboutDescription" },
       text(
@@ -44,14 +44,15 @@ const aboutMeDescription = div(
 const phrasesThatDescribeMe = [
   // make sure these aren't too long or you'll have to deal with UI quirkiness
   "full stack dev",
-  "infrastructure engineer",
+  "cloud architect",
+  "infra engineer",
   "DevOps advocate",
   "cat uncle",
   "big nerd",
 ]
 
 export const aboutMe = (state: AppState) =>
-  div({ class: "jumbotron d-flex flex-wrap flex-shrink bg-dark" }, [
+  div({ class: "jumbotron p-5 d-flex flex-wrap flex-shrink bg-dark" }, [
     avatarWithCaption(phrasesThatDescribeMe[state.phraseDescribingMeIndex]),
     aboutMeDescription,
   ])

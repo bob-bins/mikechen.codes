@@ -71,69 +71,55 @@ export const conwaysGameOfLife = (state: AppState) => {
   }
 
   return div({}, [
-    div({ class: "py-2 conwayControls" }, [
-      div({ class: "d-flex col-12", style: { "white-space": "nowrap", "line-height": "26px" } }, [
+    div({ class: "conwayControls p-1" }, [
+      div({ class: "d-flex col-12" }, [
         ...(!isMobileDevice(navigator)
           ? [
-              span({ class: "mr-2" }, [
-                button(
-                  {
-                    class: `btn btn-primary fas fa-upload`,
-                    title: `Upload Conway Board state. Takes a multiline text file with two valid characters: "." represents "dead" and "O" represents "alive"\n
+              span({ class: "px-1" }, [
+                button({
+                  class: `btn btn-primary fas fa-upload`,
+                  title: `Upload Conway Board state. Takes a multiline text file with two valid characters: "." represents "dead" and "O" represents "alive"\n
 Maximum board size is ${boardNumOfRows}x${boardNumOfCols}. Extra cells are truncated.`,
-                    onclick: state => [state, uploadConwayState],
-                  },
-                  []
-                ),
-                button(
-                  {
-                    class: `btn btn-primary fas fa-download`,
-                    title: `Download Conway Board state as a multiline string. "." represents "dead" and "O" represents "alive"`,
-                    onclick: downloadConwayState,
-                  },
-                  []
-                ),
+                  onclick: state => [state, uploadConwayState],
+                }),
+                button({
+                  class: `btn btn-primary fas fa-download`,
+                  title: `Download Conway Board state as a multiline string. "." represents "dead" and "O" represents "alive"`,
+                  onclick: downloadConwayState,
+                }),
               ]),
             ]
           : []),
-        span({ class: "mr-2" }, [
-          button(
-            {
-              class: `btn btn-primary fas ${state.conway.paused ? "fa-play" : "fa-pause"}`,
-              onclick: togglePausePlay,
-            },
-            []
-          ),
+        span({ class: "px-1" }, [
+          button({
+            class: `btn btn-primary fas ${state.conway.paused ? "fa-play" : "fa-pause"}`,
+            onclick: togglePausePlay,
+          }),
         ]),
         span(
           {
-            class:
-              "d-inline-flex align-items-center font-weight-bold text-primary mr-2 valueSpan2 text-monospace",
+            class: "d-inline-flex align-items-center text-primary px-1 fw-bold font-monospace",
           },
-          [text("Time")]
+          text("Time")
         ),
-        input(
-          {
-            type: "range",
-            class: "custom-range pt-2",
-            style: { flex: 1 },
-            min: state.conway.minTime,
-            max: state.conway.maxTimeReached,
-            value: state.conway.time,
-            oninput: setConwayTime,
-            onmousedown: pauseDueToTimerDrag,
-            onmouseup: unpauseDueToTimerDrag,
-            onfocusout: unpauseDueToTimerDrag,
-          },
-          []
-        ),
+        input({
+          type: "range",
+          class: "custom-range",
+          style: { flex: 1 },
+          min: state.conway.minTime,
+          max: state.conway.maxTimeReached,
+          value: state.conway.time,
+          oninput: setConwayTime,
+          onmousedown: pauseDueToTimerDrag,
+          onmouseup: unpauseDueToTimerDrag,
+          onfocusout: unpauseDueToTimerDrag,
+        }),
         span(
           {
-            class:
-              "d-inline-flex align-items-center font-weight-bold text-primary ml-2 valueSpan2 text-monospace",
+            class: "d-inline-flex align-items-center text-primary px-2 fw-bold font-monospace",
             style: { "user-select": "none" },
           },
-          [text(state.conway.time)]
+          text(state.conway.time)
         ),
       ]),
     ]),

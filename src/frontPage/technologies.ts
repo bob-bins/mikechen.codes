@@ -195,7 +195,7 @@ const technologiesMetadata = [
 
 export const technologiesId = "Technologies"
 export const technologies = () =>
-  div({ class: "jumbotron", id: technologiesId }, [
+  div({ class: "jumbotron p-5 bg-light", id: technologiesId }, [
     div({ class: "container text-center" }, [h1({}, text("Technologies"))]),
     div(
       { class: "container-fluid d-flex flex-row flex-wrap justify-content-center" },

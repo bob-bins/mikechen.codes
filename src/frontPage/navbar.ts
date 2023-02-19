@@ -1,40 +1,69 @@
-import { a, li, nav, ul } from "@hyperapp/html"
+import { a, button, div, li, nav, ul } from "@hyperapp/html"
 import { text } from "hyperapp"
-import { AppState } from ".."
 import { conwayHash } from "../conwayGameOfLife/globalSettings"
 import { contactMeId } from "./contactMe"
 import { practicesId } from "./myPractices"
 import { rootPath } from "./rootPath"
 import { technologiesId } from "./technologies"
 
-export const navbar = (state: AppState) =>
-  nav({}, [
-    ul(
-      {
-        onclick: (state: AppState) => ({
-          ...state,
-          navbarDropdownExpandedInMobile: !state.navbarDropdownExpandedInMobile,
-        }),
-        onmouseleave: (state: AppState) => ({ ...state, navbarDropdownExpandedInMobile: false }),
-        class: `${state.navbarDropdownExpandedInMobile ? "" : "listItemsHidden"}`,
-      },
-      [
-        li({ class: "text-monospace" }, [a({ href: `${rootPath}#` }, text(rootPath))]),
-        li({}, [a({ href: `${rootPath}#${practicesId}` }, text("Practices"))]),
-        li({}, [a({ href: `${rootPath}#${technologiesId}` }, text("Technologies"))]),
-        li({}, [a({ href: `${rootPath}#${contactMeId}` }, text("Contact"))]),
-        li({}, [
-          a({}, text("Misc Stuff")),
-          ul({}, [
-            li({}, [a({ href: conwayHash }, text("Conway's Game of Life"))]),
-            li({}, [
-              a(
-                { href: "https://github.com/bob-bins/mikechen.codes", target: "_blank" },
-                text("Site Source Code")
+const navbarId = "navbarNavDropdown"
+export const navbar = () =>
+  nav({ class: "navbar p-0 navbar-expand-sm navbar-dark bg-black sticky-top" }, [
+    div({ class: "container-fluid p-0" }, [
+      button(
+        {
+          class: "navbar-toggler",
+          type: "button",
+          "data-bs-toggle": "collapse",
+          "data-bs-target": `#${navbarId}`,
+          "aria-controls": "navbarId",
+        },
+        div({ class: "nav-item p-1" }, text("☰"))
+      ),
+      div(
+        { class: "collapse navbar-collapse", id: navbarId },
+        ul({ class: "navbar-nav" }, [
+          li(
+            { class: "nav-item" },
+            a({ class: "nav-link font-monospace", href: `${rootPath}#` }, text(rootPath))
+          ),
+          li(
+            { class: "nav-item" },
+            a({ class: "nav-link", href: `${rootPath}#${practicesId}` }, text("Practices"))
+          ),
+          li(
+            { class: "nav-item" },
+            a({ class: "nav-link", href: `${rootPath}#${technologiesId}` }, text("Technologies"))
+          ),
+          li(
+            { class: "nav-item" },
+            a({ class: "nav-link", href: `${rootPath}#${contactMeId}` }, text("Contact"))
+          ),
+          li({ class: "nav-item dropdown" }, [
+            a(
+              {
+                class: "nav-link dropdown-toggle",
+                role: "button",
+                "data-bs-toggle": "dropdown",
+              },
+              text("Misc Stuff")
+            ),
+            ul({ class: "dropdown-menu dropdown-menu-dark bg-black p-0 m-0 border-0" }, [
+              li({}, a({ class: "dropdown-item", href: conwayHash }, text("Conway's Game of Life"))),
+              li(
+                {},
+                a(
+                  {
+                    class: "dropdown-item",
+                    href: "https://github.com/bob-bins/mikechen.codes",
+                    target: "_blank",
+                  },
+                  text("Site Source Code")
+                )
               ),
             ]),
           ]),
-        ]),
-      ]
-    ),
+        ])
+      ),
+    ]),
   ])

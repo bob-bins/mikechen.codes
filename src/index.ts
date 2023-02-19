@@ -62,9 +62,9 @@ const initialState: AppState = {
 
 app({
   init: initialState,
-  subscriptions: (state: AppState) => [
+  subscriptions: () => [
     window.location.hash == conwayHash && every(50, incrementConwayTime),
-    window.location.hash != conwayHash && window.location.pathname == "/" && every(2000, updatePhrase),
+    window.location.hash != conwayHash && every(2000, updatePhrase),
   ],
   view: (state: AppState) =>
     main(
@@ -72,11 +72,11 @@ app({
       router([
         {
           hash: conwayHash,
-          view: [navbar(state), conwaysGameOfLife(state)],
+          view: [navbar(), conwaysGameOfLife(state)],
         },
         {
           path: rootPath,
-          view: [navbar(state), aboutMe(state), myPractices(), technologies(), contactMe()],
+          view: [navbar(), aboutMe(state), myPractices(), technologies(), contactMe()],
         },
       ])
     ),
