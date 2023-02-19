@@ -1,26 +1,20 @@
-import { Integer } from "../utils/Integer"
 import { isBetweenInclusive } from "../utils/isBetweenInclusive"
-import { range } from "../utils/range"
-import { parseConwayBoard } from "./conwaysGameOfLife"
+import { CellState, CellStateFn, dead, live } from "./globalSettings"
 import initialConwayState from "./initialConwayState.cells"
-
-export const live = "O"
-export const dead = "."
-export type CellState = typeof live | typeof dead
-export type CellStateFn = (row: Integer, col: Integer) => CellState
+import { parseConwayBoard } from "./parseConwayBoard"
 
 const defaultInitialState: CellStateFn = (row: number, col: number) =>
   parseConwayBoard(initialConwayState)[row][col]
 
 type UniverseDimensions = {
-  maxRow: Integer
-  maxCol: Integer
+  maxRow: number
+  maxCol: number
 }
 
 const cellState = (
-  time: Integer,
-  row: Integer,
-  col: Integer,
+  time: number,
+  row: number,
+  col: number,
   { maxRow, maxCol }: UniverseDimensions
 ): CellState => {
   row =
@@ -54,10 +48,10 @@ const cellState = (
     : dead
 }
 
-export let _cellStateCache: {
-  [time: Integer]: {
-    [row: Integer]: {
-      [col: Integer]: CellState
+let _cellStateCache: {
+  [time: number]: {
+    [row: number]: {
+      [col: number]: CellState
     }
   }
 } = {}
@@ -66,20 +60,20 @@ export const clearCellStateCache = () => {
   _cellStateCache = {}
 }
 
-export const clearCellStateCacheAtTime = (time: Integer) => {
+export const clearCellStateCacheAtTime = (time: number) => {
   delete _cellStateCache[time]
 }
 
-const setCellState = (time: Integer, row: Integer, col: Integer, state: CellState) => {
+const setCellState = (time: number, row: number, col: number, state: CellState) => {
   if (_cellStateCache[time] == undefined) _cellStateCache[time] = {}
   if (_cellStateCache[time][row] == undefined) _cellStateCache[time][row] = {}
   return (_cellStateCache[time][row][col] = state)
 }
 
 export const getCellState = (
-  time: Integer,
-  row: Integer,
-  col: Integer,
+  time: number,
+  row: number,
+  col: number,
   { maxRow, maxCol }: UniverseDimensions, // Cells outside the Universe bounds are "wrapped"
   initialCellStateFn: CellStateFn = defaultInitialState
 ): CellState => {
@@ -101,18 +95,4 @@ export const getCellState = (
       ? setCellState(0, row, col, initialCellStateFn(row, col))
       : setCellState(time, row, col, cellState(time, row, col, { maxRow, maxCol })))
   )
-}
-
-const drawGridForDebuggingPurposes = (time: Integer, maxRow: Integer, maxCol: Integer) => {
-  range(0, maxRow)
-    .map(rowIndex => range(0, maxCol).map(colIndex => [rowIndex, colIndex]))
-    .forEach(row =>
-      console.log(
-        row
-          .map(([rowIndex, colIndex]) => getCellState(time, rowIndex, colIndex, { maxRow, maxCol }))
-          .join(" ")
-      )
-    )
-  console.log("")
-  console.log("")
 }

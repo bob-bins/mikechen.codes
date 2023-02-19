@@ -2,38 +2,11 @@ import { canvas, div, input, span, button } from "@hyperapp/html"
 import { text } from "hyperapp"
 import { range } from "../utils/range"
 import { AppState } from "../index"
-import { CellState, clearCellStateCache, clearCellStateCacheAtTime, dead, getCellState, live } from "./board"
+import { clearCellStateCache, getCellState } from "./engine"
 import { isMobileDevice } from "../utils/isMobileDevice"
 import { uploadTextFromBrowser } from "../utils/uploadTextFromBrowser"
-import memoize from "micro-memoize"
-
-export const numOfCols = 500
-export const numOfRows = 500
-
-export const parseConwayBoard = memoize((stringifiedState: string): Array<Array<CellState>> => {
-  const rows = stringifiedState
-    .split("\n")
-    .slice(0, numOfRows) // todo: remove if letting users upload a larger board
-    .filter(row => row[0] != "!")
-    .map(row => row.replaceAll(/[^O.]/g, "."))
-  return [
-    ...rows.map(row =>
-      row
-        .padEnd(numOfCols, dead)
-        .split("")
-        .slice(0, numOfCols) // todo: remove if letting users upload a larger board
-        .map(c => c as CellState)
-    ),
-    ...Array(numOfRows - rows.length)
-      .fill(undefined)
-      .map(_ =>
-        ""
-          .padEnd(numOfCols, dead)
-          .split("")
-          .map(c => c as CellState)
-      ),
-  ]
-})
+import { boardNumOfRows, boardNumOfCols, live } from "./globalSettings"
+import { parseConwayBoard } from "./parseConwayBoard"
 
 export const conwaysGameOfLife = (state: AppState) => {
   const conwayElementId = "conway"
@@ -48,19 +21,20 @@ export const conwaysGameOfLife = (state: AppState) => {
     const minDisplayedColNum = state.conway.centerX - Math.ceil(state.conway.draggedX / cellWidth)
     const minDisplayedRowNum = state.conway.centerY - Math.ceil(state.conway.draggedY / cellWidth)
 
-    const displayedConwayState = range(minDisplayedRowNum, minDisplayedRowNum + numOfRows - 1).map(rowIndex =>
-      range(minDisplayedColNum, minDisplayedColNum + numOfCols - 1).map(colIndex =>
-        getCellState(
-          state.conway.time,
-          rowIndex,
-          colIndex,
-          {
-            maxRow: numOfRows - 1,
-            maxCol: numOfCols - 1,
-          },
-          state.conway.initialBoardFn
+    const displayedConwayState = range(minDisplayedRowNum, minDisplayedRowNum + boardNumOfRows - 1).map(
+      rowIndex =>
+        range(minDisplayedColNum, minDisplayedColNum + boardNumOfCols - 1).map(colIndex =>
+          getCellState(
+            state.conway.time,
+            rowIndex,
+            colIndex,
+            {
+              maxRow: boardNumOfRows - 1,
+              maxCol: boardNumOfCols - 1,
+            },
+            state.conway.initialBoardFn
+          )
         )
-      )
     )
 
     const ctx = htmlCanvas.getContext("2d")
@@ -106,7 +80,7 @@ export const conwaysGameOfLife = (state: AppState) => {
                   {
                     class: `btn btn-primary fas fa-upload`,
                     title: `Upload Conway Board state. Takes a multiline text file with two valid characters: "." represents "dead" and "O" represents "alive"\n
-Maximum board size is ${numOfRows}x${numOfCols}. Extra cells are truncated.`,
+Maximum board size is ${boardNumOfRows}x${boardNumOfCols}. Extra cells are truncated.`,
                     onclick: state => [state, uploadConwayState],
                   },
                   []
@@ -187,12 +161,12 @@ const pauseDueToTimerDrag = (state: AppState) => ({
 })
 
 const downloadConwayState = (state: AppState) => {
-  const stringifiedConwayBoard = range(0, numOfRows)
+  const stringifiedConwayBoard = range(0, boardNumOfRows)
     .map(row =>
-      range(0, numOfCols).map(col =>
+      range(0, boardNumOfCols).map(col =>
         getCellState(state.conway.time, row, col, {
-          maxRow: numOfRows - 1,
-          maxCol: numOfCols - 1,
+          maxRow: boardNumOfRows - 1,
+          maxCol: boardNumOfCols - 1,
         })
       )
     )
@@ -228,28 +202,6 @@ const setConwayTime = (state: AppState, event): AppState => ({
     time: event.target.valueAsNumber,
   },
 })
-
-export const maxCachedTimeRange = 500
-
-export const incrementConwayTime = (state: AppState): AppState => {
-  if (state.conway.paused || state.conway.pausedDueToTimerDrag) {
-    return state
-  } else {
-    const newState = {
-      ...state,
-      conway: {
-        ...state.conway,
-        time: state.conway.time + 1,
-        maxTimeReached: Math.max(state.conway.time + 1, state.conway.maxTimeReached),
-        minTime: Math.max(0, state.conway.maxTimeReached + 1 - maxCachedTimeRange),
-      },
-    }
-    if (newState.conway.minTime > 0 && newState.conway.minTime > state.conway.minTime) {
-      clearCellStateCacheAtTime(newState.conway.minTime - 1)
-    }
-    return newState
-  }
-}
 
 const zoomConwayGrid = (state: AppState, event): AppState => ({
   ...state,

@@ -41,14 +41,7 @@ const aboutMeDescription = div(
   ]
 )
 
-export const aboutMeId = "About"
-export const aboutMe = (state: AppState) =>
-  div({ class: "jumbotron d-flex flex-wrap flex-shrink bg-dark", id: aboutMeId }, [
-    avatarWithCaption(phrasesThatDescribeMe[state.phraseDescribingMeIndex]),
-    aboutMeDescription,
-  ])
-
-export const phrasesThatDescribeMe = [
+const phrasesThatDescribeMe = [
   // make sure these aren't too long or you'll have to deal with UI quirkiness
   "full stack dev",
   "infrastructure engineer",
@@ -56,6 +49,12 @@ export const phrasesThatDescribeMe = [
   "cat uncle",
   "big nerd",
 ]
+
+export const aboutMe = (state: AppState) =>
+  div({ class: "jumbotron d-flex flex-wrap flex-shrink bg-dark" }, [
+    avatarWithCaption(phrasesThatDescribeMe[state.phraseDescribingMeIndex]),
+    aboutMeDescription,
+  ])
 
 export const updatePhrase = (state: AppState): AppState => ({
   ...state,
