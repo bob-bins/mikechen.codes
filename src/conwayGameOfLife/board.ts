@@ -5,9 +5,9 @@ import { Integer } from "../utils/Integer"
 export const live = "O"
 export const dead = "."
 export type CellState = typeof live | typeof dead
-type CellStateFn = (x: Integer, y: Integer) => CellState
+export type CellStateFn = (row: Integer, col: Integer) => CellState
 
-const initialCellStateFn: CellStateFn = () => (Math.random() > 0.5 ? live : dead)
+const randomCellState: CellStateFn = () => (Math.random() > 0.5 ? live : dead)
 
 type UniverseDimensions = {
   maxRow: Integer
@@ -51,13 +51,21 @@ const cellState = (
     : dead
 }
 
-export const _cellStateCache: {
+export let _cellStateCache: {
   [time: Integer]: {
     [row: Integer]: {
       [col: Integer]: CellState
     }
   }
 } = {}
+
+export const clearCellStateCache = () => {
+  _cellStateCache = {}
+}
+
+export const clearCellStateCacheAtTime = (time:Integer) => {
+  delete _cellStateCache[time]
+}
 
 const setCellState = (time: Integer, row: Integer, col: Integer, state: CellState) => {
   if (_cellStateCache[time] == undefined) _cellStateCache[time] = {}
@@ -69,7 +77,8 @@ export const getCellState = (
   time: Integer,
   row: Integer,
   col: Integer,
-  { maxRow, maxCol }: UniverseDimensions // Cells outside the Universe bounds are "wrapped"
+  { maxRow, maxCol }: UniverseDimensions, // Cells outside the Universe bounds are "wrapped"
+  initialCellStateFn: CellStateFn = randomCellState
 ): CellState => {
   row =
     row < 0
@@ -83,6 +92,13 @@ export const getCellState = (
       : col > maxCol
       ? 0 - 1 + ((col - maxCol) % (maxCol - 0))
       : col
+  if (time == 0) {
+    try {
+      initialCellStateFn(row, col)
+    } catch(e) {
+      console.log(row, col, e)
+    }
+  }
   return (
     _cellStateCache[time]?.[row]?.[col] ??
     (time == 0

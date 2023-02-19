@@ -1,6 +1,7 @@
 import { main } from "@hyperapp/html"
 import { every } from "@hyperapp/time"
 import { app } from "hyperapp"
+import { CellStateFn } from "./conwayGameOfLife/board"
 import { conwayHash } from "./conwayGameOfLife/conwayHash"
 import { conwaysGameOfLife, incrementConwayTime } from "./conwayGameOfLife/conwaysGameOfLife"
 import { aboutMe, updatePhrase } from "./frontPage/aboutMe"
@@ -21,12 +22,14 @@ export type AppState = {
     pausedDueToTimerDrag: boolean
     time: number
     maxTimeReached: number
+    minTime: number
     cellWidthPx: number
     centerX: number
     centerY: number
     draggable: boolean
     draggedX: number
     draggedY: number
+    initialBoardFn?: CellStateFn
     mobile: {
       startDragX: number | undefined
       startDragY: number | undefined
@@ -41,8 +44,9 @@ const initialState: AppState = {
   conway: {
     paused: false,
     pausedDueToTimerDrag: false,
-    time: 1,
-    maxTimeReached: 1,
+    time: 0,
+    maxTimeReached: 0,
+    minTime: 0,
     cellWidthPx: 5,
     centerX: 0,
     centerY: 0,
@@ -59,8 +63,8 @@ const initialState: AppState = {
 app({
   init: initialState,
   subscriptions: (state: AppState) => [
-    window.location.hash == conwayHash && every(100, incrementConwayTime),
-    window.location.pathname == "/" && every(2000, updatePhrase),
+    window.location.hash == conwayHash && every(50, incrementConwayTime),
+    window.location.hash != conwayHash && window.location.pathname == "/" && every(2000, updatePhrase),
   ],
   view: (state: AppState) =>
     main(
