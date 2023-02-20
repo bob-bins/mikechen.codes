@@ -23,7 +23,6 @@ export const navbar = () =>
           type: "button",
           "data-bs-toggle": "collapse",
           "data-bs-target": `#${navbarId}`,
-          "aria-controls": "navbarId",
         },
         div({ class: "nav-item p-1" }, text("☰"))
       ),
@@ -64,7 +63,6 @@ export const navbar = () =>
                 class: "nav-link dropdown-toggle",
                 role: "button",
                 "data-bs-toggle": "dropdown",
-                onclick: returnCopiedState,
               },
               text("Misc Stuff")
             ),
