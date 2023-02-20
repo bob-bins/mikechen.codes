@@ -10,8 +10,6 @@ import { navbar } from "./frontPage/navbar"
 import "./style.scss"
 
 export type AppState = {
-  mobileNavbarExpanded: boolean
-  navbarDropdownExpandedInMobile: boolean
   phraseDescribingMeIndex: number
   conway: {
     paused: boolean
@@ -34,8 +32,6 @@ export type AppState = {
 }
 
 const initialState: AppState = {
-  mobileNavbarExpanded: false,
-  navbarDropdownExpandedInMobile: false,
   phraseDescribingMeIndex: 0,
   conway: {
     paused: false,
