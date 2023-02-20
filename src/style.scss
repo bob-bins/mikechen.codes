@@ -3,6 +3,14 @@ html {
   scroll-padding-top: 3rem;
 }
 
+@media (max-width: 576px )  {
+  html {
+    // This is a workaround for a bug where the collapsable menu pushes down content on mobile but not on desktop.
+    // It causes Anchor links to send the user too far down the page on mobile.
+    scroll-padding-top: 20rem;
+  }
+}
+
 .aboutDescription {
   font-size: 1.4rem;
 }
