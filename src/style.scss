@@ -51,7 +51,7 @@ html {
   background: black;
   display: block;
   // height is hardcoded to be 100vh - navbar_height - conwayControls_height. Todo: find a better way to do this.
-  height: calc(100vh - 56px - 38px);
+  height: calc(100dvh - 56px - 38px);
 }
 
 .conwayControls {
