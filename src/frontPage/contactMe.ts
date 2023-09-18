@@ -22,7 +22,7 @@ const linkedInButton = () =>
   a(
     {
       class: "nav-link link-primary text-center",
-      href: "https://www.linkedin.com/in/mike-chen-96a75110/",
+      href: "https://www.linkedin.com/in/michael-chen-96a75110/",
       target: "_blank",
     },
     [i({ class: "fa fa-linkedin-square me-2", "aria-hidden": true }), text("LinkedIn")]
