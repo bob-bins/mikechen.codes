@@ -2,8 +2,8 @@ import { a, div, h1, img } from "@hyperapp/html"
 import { text } from "hyperapp"
 import aws_logo from "./logos/aws_logo.svg"
 import bash_logo from "./logos/bash_logo.svg"
-import cassandra_logo from "./logos/cassandra_logo.svg"
 import c_language_logo from "./logos/c_language_logo.svg"
+import cassandra_logo from "./logos/cassandra_logo.svg"
 import docker_icon from "./logos/docker_icon.svg"
 import github_actions_logo from "./logos/github_actions_logo.svg"
 import gitlab_logo from "./logos/gitlab_logo.svg"
@@ -12,6 +12,7 @@ import hyperapp_logo from "./logos/hyperapp_logo.svg"
 import jenkins_logo from "./logos/jenkins_logo.svg"
 import kafka_logo from "./logos/kafka_logo.svg"
 import kubernetes_logo from "./logos/kubernetes_logo.svg"
+import linkerd_logo from "./logos/linkerd_logo.svg"
 import nodejs_logo from "./logos/nodejs_logo.svg"
 import postgresql_logo from "./logos/postgresql_logo.svg"
 import pulumi_logo from "./logos/pulumi_logo.svg"
@@ -118,6 +119,12 @@ const technologiesMetadata = [
     favorite: true,
     url: "https://kubernetes.io/",
     logo: kubernetes_logo,
+  },
+  {
+    name: "Linkerd",
+    favorite: true,
+    url: "https://linkerd.io/",
+    logo: linkerd_logo,
   },
   {
     name: "Pulumi",
